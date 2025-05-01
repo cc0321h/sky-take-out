@@ -147,6 +147,9 @@ public class DishServiceImpl implements DishService{
         dishFlavorMapper.deleteByDishId(dish.getId());
 
         //添加菜品的口味信息
+        if(dishDTO.getFlavors() == null || dishDTO.getFlavors().size() == 0){
+            return;
+        }
         List<DishFlavor> flavors = dishDTO.getFlavors();
         setDishFlavorDishId(flavors, dish.getId());
         dishFlavorMapper.insertBanch(dishDTO.getFlavors());

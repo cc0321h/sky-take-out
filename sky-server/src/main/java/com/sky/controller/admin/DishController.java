@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,7 @@ public class DishController {
      */
     @PostMapping
     @ApiOperation("新增菜品")
+    @CacheEvict(cacheNames = "dishCache", key = "#dishDTO.categoryId")
     public Result add(@RequestBody DishDTO dishDTO) {
         log.info("新增菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
@@ -81,6 +83,7 @@ public class DishController {
      */
     @PostMapping("status/{status}")
     @ApiOperation("禁用和启用菜品")
+    @CacheEvict(cacheNames = "dishCache", allEntries = true)
     public Result startOrStop(@PathVariable Integer status, Long id) {
         log.info("禁用和启用菜品：{}, {}", status, id);
         dishService.startOrStop(status, id);
@@ -107,6 +110,7 @@ public class DishController {
      */
     @PutMapping
     @ApiOperation("更新菜品")
+    @CacheEvict(cacheNames = "dishCache", allEntries = true)
     public Result update(@RequestBody DishDTO dishDTO) {
         log.info("更新菜品：{}", dishDTO);
         dishService.updateWithFlavor(dishDTO);

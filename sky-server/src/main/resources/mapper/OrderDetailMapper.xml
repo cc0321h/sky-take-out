@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.OrderDetailMapper">
+
+    <insert id="insertBatch">
+        insert into order_detail (image, number, name, dish_id, setmeal_id, order_id, dish_flavor, amount)
+            values 
+        <foreach collection="orderDetailList" item="od">
+            (#{od.image}, #{od.number}, #{od.name}, #{od.dishId}, #{od.setmealId}, #{od.orderId}, #{od.dishFlavor}, #{od.amount})
+        </foreach>
+    </insert>
+
+    <select id="pageQuery" resultType="OrderDetail">
+        select od.* from order_detail od left join orders o on od.order_id = o.id 
+        <where>
+            <if test="number != null and number!=''">
+                and od.number like concat('%',#{number},'%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and o.phone like concat('%',#{phone},'%')
+            </if>
+            <if test="userId != null">
+                and o.user_id = #{userId}
+            </if>
+            <if test="status != null">
+                and o.status = #{status}
+            </if>
+            <if test="beginTime != null">
+                and o.order_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and o.order_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by o.order_time desc
+    </select>
+</mapper>
