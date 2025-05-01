@@ -42,7 +42,7 @@
         </set>
         where id = #{id}
     </update>
-    <select id="pageQuery" resultType="Order">
+    <select id="pageQuery" resultType="Orders">
         select * from orders 
         <where>
             <if test="number != null and number!=''">

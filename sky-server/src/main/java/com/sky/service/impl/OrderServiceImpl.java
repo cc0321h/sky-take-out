@@ -17,6 +17,7 @@ import com.sky.service.OrderService;
 import com.sky.service.ShoppingService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 
@@ -236,4 +237,87 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Orders.CANCELLED);
         orderMapper.update(order);
     }
+
+    /**
+     * get order statistics
+     * @return
+     */
+    @Override
+    public OrderStatisticsVO statistics() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        Integer toBeConfirmed = orderMapper.getToBeConfirmed();
+        Integer confirmed = orderMapper.getConfirmed();
+        Integer toBeInProgres = orderMapper.getToBeInProgres();
+        orderStatisticsVO.setToBeConfirmed(toBeConfirmed);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setDeliveryInProgress(toBeInProgres);
+        return orderStatisticsVO;
+    }
+
+ /**
+     * confirm order
+     * @param orderConfirmDTO
+     * @return
+     */
+    public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
+        Orders orders = Orders.builder()
+                .id(ordersConfirmDTO.getId())
+                .status(Orders.CONFIRMED)
+                .build();
+        orderMapper.update(orders);
+    }
+
+     /**
+     * reject order
+     * @param ordersRejectionDTO
+     * @return
+     */
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
+        Orders orders = Orders.builder()
+                .id(ordersRejectionDTO.getId())
+                .status(Orders.CANCELLED)
+                .rejectionReason(ordersRejectionDTO.getRejectionReason())
+                .build();
+        orderMapper.update(orders);
+    }
+
+    /**
+     * delivery order
+     * @param id
+     * @return
+     */
+     public void delivery(Long id) {
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.DELIVERY_IN_PROGRESS)
+                .build();
+        orderMapper.update(orders);
+     }
+
+     /**
+     * cancel order
+     * @param ordersCancelDTO
+     * @return
+     */
+     public void cancel(OrdersCancelDTO ordersCancelDTO) {
+        Orders orders = Orders.builder()
+                .id(ordersCancelDTO.getId())
+                .status(Orders.CANCELLED)
+                .cancelReason(ordersCancelDTO.getCancelReason())
+                .build();
+        orderMapper.update(orders);
+     }
+
+     /**
+     * complete order
+     * @param id
+     * @return
+     */
+     public void complete(Long id) {
+        Orders orders = Orders.builder()
+                .id(id)
+                .status(Orders.COMPLETED)
+                .build();
+        orderMapper.update(orders);
+     }
 }
