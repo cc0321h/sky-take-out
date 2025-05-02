@@ -4,6 +4,9 @@ import com.github.pagehelper.Page;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -63,4 +66,13 @@ public interface OrderMapper {
      */
     @Select("select count(id) from orders where status = 4")
     Integer getToBeInProgres();
+
+    /**
+     * get order by status and timeOut
+     * @param pendingPayment
+     * @param time
+     * @return
+     */
+    @Select("select * from orders where status = #{status} and order_time < #{time}")
+    List<Orders> getByStatusAndTimeOut(Integer status, LocalDateTime time);
 }

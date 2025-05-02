@@ -5,7 +5,7 @@
     <insert id="insertBatch">
         insert into order_detail (image, number, name, dish_id, setmeal_id, order_id, dish_flavor, amount)
             values 
-        <foreach collection="orderDetailList" item="od">
+        <foreach collection="orderDetailList" item="od" separator=",">
             (#{od.image}, #{od.number}, #{od.name}, #{od.dishId}, #{od.setmealId}, #{od.orderId}, #{od.dishFlavor}, #{od.amount})
         </foreach>
     </insert>
