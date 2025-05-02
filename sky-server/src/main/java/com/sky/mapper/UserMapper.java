@@ -1,5 +1,7 @@
 package com.sky.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -25,5 +27,24 @@ public interface UserMapper {
 
     @Select("select * from user where id = #{userId}")
     public User getById(Long userId);
+
+    /**
+     * new user statistics
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select count(id) from user where create_time between #{begin} and #{end}")
+    public Integer getNewUserSum(Map map);
+
+    /**
+     * total user statistics
+     * @param map 
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select count(id) from user where create_time between #{begin} and #{end}")
+    public Integer getTotalUserSum(Map map);
 
 }

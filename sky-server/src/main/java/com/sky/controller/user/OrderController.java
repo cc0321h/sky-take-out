@@ -111,4 +111,12 @@ public class OrderController {
         orderService.cancelOrder(orderId);
         return Result.success();
     }
+
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("reminder")
+    public Result reminder(@PathVariable("id") Long id) {
+        log.info("reminder: {}", id);
+        orderService.reminder(id);
+        return Result.success();
+    }
 }

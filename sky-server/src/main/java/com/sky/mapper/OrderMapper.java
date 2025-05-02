@@ -1,11 +1,13 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -32,14 +34,14 @@ public interface OrderMapper {
     void update(Orders orders);
 
     /**
-     * get all orders by userId
+     * get all orders
      * @param orderPageQueryDTO
      * @return
      */
     Page<Orders> pageQuery(OrdersPageQueryDTO orderPageQueryDTO);
 
     /**
-     * get orderDetail by id
+     * get order by id
      * @param orderId
      * @return
      */
@@ -75,4 +77,38 @@ public interface OrderMapper {
      */
     @Select("select * from orders where status = #{status} and order_time < #{time}")
     List<Orders> getByStatusAndTimeOut(Integer status, LocalDateTime time);
+
+    /**
+     * turnover statistics
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Select("select sum(amount) from orders where status = #{status} and order_time between #{begin} and #{end}")
+    Double getTurnover(Map map);
+
+    /**
+     * get total order number
+     * @param map
+     * @return
+     */
+    @Select("select count(id) from orders where order_time between #{begin} and #{end}")
+    Integer getToralOrderNum(Map map);
+
+    /**
+     * get completed order number
+     * @param map
+     * @return
+     */
+    @Select("select count(id) from orders where status = #{status} and order_time between #{begin} and #{end}")
+    Integer getCompletedOrderNum(Map map);
+
+    /**
+     * get top 10
+     * @param map
+     * @return
+     */
+    @Select("select od.name, sum(od.number) number from orders o, order_detail od where o.id = od.order_id and o.status = #{status} and o.order_time between #{begin} and #{end} group by od.name order by number desc limit 10")
+    List<GoodsSalesDTO> getTop10(Map map);
+    
 }
