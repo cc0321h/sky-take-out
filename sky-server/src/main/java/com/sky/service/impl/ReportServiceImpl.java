@@ -122,7 +122,7 @@ public class ReportServiceImpl implements ReportService {
             totalOrderCount += totalOrderNum;
             totalOrderList.add(totalOrderNum);
 
-            Integer completedOrderNum = orderMapper.getCompletedOrderNum(map);
+            Integer completedOrderNum = orderMapper.getOrderNumByStatusAndTime(map);
             completedOrderNum = completedOrderNum == null ? 0 : completedOrderNum;
             completedOrderCount += completedOrderNum;
             completedOrderList.add(completedOrderNum);

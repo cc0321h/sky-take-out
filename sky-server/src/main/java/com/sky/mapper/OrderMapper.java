@@ -101,7 +101,7 @@ public interface OrderMapper {
      * @return
      */
     @Select("select count(id) from orders where status = #{status} and order_time between #{begin} and #{end}")
-    Integer getCompletedOrderNum(Map map);
+    Integer getOrderNumByStatusAndTime(Map map);
 
     /**
      * get top 10

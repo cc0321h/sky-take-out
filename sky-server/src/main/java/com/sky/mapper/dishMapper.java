@@ -67,4 +67,12 @@ public interface DishMapper {
     @Select("select * from dish where category_id = #{categoryId} and status = 1")
     public List<Dish> list(Long categoryId);
 
+    /**
+     * 根据状态查询菜品数量
+     * @param status
+     * @return
+     */
+    @Select("select count(*) from dish where status = #{status}")
+    public Integer getDishCountByStatus(Integer status);
+
 }
