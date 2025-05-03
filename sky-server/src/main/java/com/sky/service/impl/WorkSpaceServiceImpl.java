@@ -36,26 +36,31 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
      * 营业数据查询
      * @return
      */
-    public BusinessDataVO getBusinessData() {
-        LocalDateTime begin = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+    public BusinessDataVO getBusinessData(LocalDateTime begin, LocalDateTime end) {
         Map map = new HashMap();
         map.put("begin", begin);
         map.put("end", end);
-        map.put("status", Orders.COMPLETED);
-        // 营业额
-        Double turnover = orderMapper.getTurnover(map);
         // 总订单量
         Integer orderCount = orderMapper.getToralOrderNum(map);
+        orderCount = orderCount == null ? 0 : orderCount;
+        // 营业额
+        map.put("status", Orders.COMPLETED);
+        Double turnover = orderMapper.getTurnover(map);
+        turnover = turnover == null ? 0.0 : turnover;
         // 有效订单量
         Integer validOrderCount = orderMapper.getOrderNumByStatusAndTime(map);
-        // 订单完成率
-        Double orderCompletionRate = validOrderCount * 1.0/ orderCount;
-        // 平均客单价
-        Double unitPrice = turnover / validOrderCount;
+        validOrderCount = validOrderCount == null ? 0 : validOrderCount;
+        Double orderCompletionRate = 0.0;
+        Double unitPrice = 0.0;
+        if (orderCount != 0 && validOrderCount != 0) {
+            // 订单完成率
+            orderCompletionRate = validOrderCount.doubleValue()/ orderCount;
+            // 平均客单价
+            unitPrice = turnover / validOrderCount;
+        }
         // 新增用户
         Integer newUserCount = userMapper.getNewUserSum(map);
-
+        newUserCount = newUserCount == null ? 0 : newUserCount;
         return BusinessDataVO.builder()
             .turnover(turnover)
             .validOrderCount(validOrderCount)
@@ -118,6 +123,5 @@ public class WorkSpaceServiceImpl implements WorkSpaceService {
             .discontinued(disableSetmealCount)
             .build();
     }
-    
     
 }

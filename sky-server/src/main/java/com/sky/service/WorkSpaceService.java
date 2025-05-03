@@ -1,5 +1,8 @@
 package com.sky.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.sky.vo.BusinessDataVO;
 import com.sky.vo.DishOverViewVO;
 import com.sky.vo.OrderOverViewVO;
@@ -9,9 +12,11 @@ public interface WorkSpaceService {
 
     /**
      * 营业数据查询
+     * @param end 
+     * @param begin 
      * @return
      */
-    BusinessDataVO getBusinessData();
+    BusinessDataVO getBusinessData(LocalDateTime begin, LocalDateTime end);
 
     /**
      * 订单统计

@@ -1,6 +1,11 @@
 package com.sky.controller.admin;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +38,9 @@ public class WorkSpaceController {
     @ApiOperation("营业数据查询")
     public Result<BusinessDataVO> businessData() {
         log.info("营业数据查询");
-        BusinessDataVO businessDataVO = workSpaceService.getBusinessData();
+        LocalDateTime begin = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        BusinessDataVO businessDataVO = workSpaceService.getBusinessData(begin, end);
         return Result.success(businessDataVO);
     }
 
